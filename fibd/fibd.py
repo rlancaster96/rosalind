@@ -1,26 +1,26 @@
 #!/usr/bin/env python
 
-# Not finished yet #
+#doesnt work yet!#
 
-def rabbits(n, k):
-    months = n-1
-    litsize = k
-    newborn = 1
-    Ojuvenile = 0
-    Njuvenile = 0
-    adult = 0
-    
-    population = 0 
-    
-    while months > 0:
-        
-        Njuvenile = newborn
-        adult = adult + Ojuvenile
-        newborn = adult*litsize
-        Ojuvenile = Njuvenile
-        population = adult + newborn + Ojuvenile
-        months -= 1
-    return population   
-                
-pop = rabbits(33,5)
-print(pop)
+import numpy as np
+
+def pop(n, m):
+    # make an array that reflects the number of months lived on one axis and the generation on the other axis.
+    population = np.zeros((n,m))
+    # initialize with 1 pair 
+    population[0][0] = 1
+    # for every month we are interested in
+    for i in range(1,n):
+        # newborns = sum of the adults from the previous generation - newborns from the previous generation
+        population[i][0] = population[i-1].sum() - population[i-1][0]
+        # update the values of the next row in the array of adults shifting 1 year over as they age 
+        for b in range(1,m):
+            population[i][b] = population[i-1][b-1]
+
+    #return the sum of the population at month n (n-1 because python is 0-based)
+    total_pop = int(population[n-1].sum())
+    return total_pop, population
+
+total_pop, population = pop(6,3)
+print(population)
+print(total_pop)
